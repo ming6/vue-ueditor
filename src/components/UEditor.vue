@@ -1,11 +1,14 @@
 <template>
-  <script :id="randomId" name="content" type="text/plain"></script>
+  <script :id="randomId" name="content" type="text/plain">
+    {{ value }}
+  </script>
 </template>
 
 <script>
 export default {
   name: 'VueUEditor',
   props: {
+    value: String,
     ueditorPath: {
       // UEditor 代码的路径
       type: String,
@@ -42,6 +45,13 @@ export default {
     // 组件销毁的时候，要销毁 UEditor 实例
     if (this.instance !== null && this.instance.destroy) {
       this.instance.destroy();
+    }
+  },
+  watch: {
+    value: function (value) {
+      if (this.instance && value !== this.instance.getContent()) {
+        this.instance.setContent(value);
+      }
     }
   },
   methods: {
@@ -94,6 +104,9 @@ export default {
           // 绑定事件，当 UEditor 初始化完成后，将编辑器实例通过自定义的 ready 事件交出去
           this.instance.addListener('ready', () => {
             this.$emit('ready', this.instance);
+          });
+          this.instance.addListener('contentChange', () => {
+            this.$emit('input', this.instance.getContent());
           });
         });
       }
