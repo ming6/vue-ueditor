@@ -1,3 +1,6 @@
+# fork from https://github.com/SilentTiger/vue-ueditor
+1. 修改支持v-model
+
 # vue-ueditor
 a wrapper of UEditor for vue 2.x
 
